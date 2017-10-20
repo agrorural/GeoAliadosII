@@ -1,0 +1,49 @@
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#map {
+	height: 600px;
+}
+
+#app{
+	.app-container{
+		@extend .row;
+		.search{
+			@extend .col-sm-12;
+			form{
+				@extend .row;
+				.form-group{
+					@extend .col-sm-1;
+					&.txtDenom{
+						@extend .col-sm-3;
+					}
+					&.btn-group{
+						@extend .col-sm-2;
+					}
+				}
+				.selGeo{
+					
+				}
+			}
+		}
+		.map{
+			@extend .col-sm-6;
+		}
+		.chart{
+			@extend .col-sm-6;
+		}
+	}
+}
