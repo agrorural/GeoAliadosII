@@ -7,6 +7,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Styles -->
         <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
+        <!--Load the AJAX API-->
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartkick/2.2.4/chartkick.js"></script>
         @yield('head')
     </head>
     <body>

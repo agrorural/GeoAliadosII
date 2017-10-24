@@ -53,7 +53,23 @@
                 <div id="map"></div>
             </div>
             <div class="chart">
-                Chart
+                <div class="chart__table" style="height: 300px; margin-bottom: 30;">
+                  <table class="table table-striped table-bordered table-hover">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Nº PDN</th>
+                        <th scope="col">Inversión PDN</th>
+                        <th scope="col">Nº PDNC</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="chart__image" style="height: 300px">
+                  <div id="columnchart_material" style="height: 300px"></div>
+                </div>
             </div>
         </div>
 
