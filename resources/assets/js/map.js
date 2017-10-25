@@ -160,9 +160,9 @@ function showDepartamentos(){
     $('.chart__table').find("table tbody").empty();
     event.forEach(function(feature){
       chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
-      setData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc)}});
-      //console.log(feature.f);
-      $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + feature.f.Inversion_pdn + '</td><td>' + feature.f.Nro_pdnc + '</td></tr>');
+      setData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+      console.log(feature.f);
+      $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + feature.f.Inversion_pdn + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + feature.f.Inversion_pdnc + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + feature.f.Inversion_pdt + '</td></tr>');
     });
 
     new Chartkick.ColumnChart("columnchart_material", setData, {legend: "bottom"});

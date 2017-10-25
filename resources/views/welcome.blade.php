@@ -53,14 +53,22 @@
                 <div id="map"></div>
             </div>
             <div class="chart">
-                <div class="chart__table" style="height: 300px; margin-bottom: 30;">
-                  <table class="table table-striped table-bordered table-hover">
+                <div class="chart__table" style="height: 300px; margin-bottom: 30px;">
+                  <table class="table table-striped table-bordered table-hover table-responsive">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col">Departamento</th>
-                        <th scope="col">Nº PDN</th>
-                        <th scope="col">Inversión PDN</th>
-                        <th scope="col">Nº PDNC</th>
+                        <th rowspan="2">Departamento</th>
+                        <th colspan="2">PDN</th>
+                        <th colspan="2">PDNC</th>
+                        <th colspan="2">PDT</th>
+                      </tr>
+                      <tr>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Inversión</th>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Inversión</th>
+                        <th scope="col">Nº</th>
+                        <th scope="col">Inversión</th>
                       </tr>
                     </thead>
                     <tbody>
