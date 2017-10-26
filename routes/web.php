@@ -20,3 +20,5 @@ Route::get('/departamentos', 'GeoController@getDepartamentos');
 Route::get('/provincias', 'GeoController@getProvincias');
 
 Route::get('/distritos', 'GeoController@getDistritos');
+
+Route::get('/cp', 'GeoController@getCP');

@@ -10,6 +10,7 @@
         <!--Load the AJAX API-->
         <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartkick/2.2.4/chartkick.js"></script>
+        <script src="https://use.fontawesome.com/00e9311fd7.js"></script>
         @yield('head')
     </head>
     <body>

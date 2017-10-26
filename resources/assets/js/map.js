@@ -1,9 +1,12 @@
 let tipoMapa = 1;
 let map;
-let aliadosDepID = '03,05,09,12,19';
+let aliadosDepID = '03,05,09,10,12,19';
+let deno = '';
 let depID = '';
 let proID = '';
 let disID = '';
+$('.chart__table').hide();
+$('.chart__image').hide();
 
 function numberWithCommas(x) {
     var parts = x.toString().split(".");
@@ -129,16 +132,17 @@ map = new google.maps.Map(document.getElementById('map'), {
 let capaDepartamentos = new google.maps.Data();
 let capaProvincias = new google.maps.Data();
 let capaDistritos = new google.maps.Data();
+let capaCP = new google.maps.Data();
 
 let dataDepartamentos = null;
 
-function showDepartamentos(){
+function showDepartamentos(deno){
   cleanForm();
 
   depID = '00';
 
   $("#ddlDepartamento option").each(function(){
-    if($(this).val() == depID){
+    if($(this).val() === depID){
       $(this).attr('selected', true);    
     }else{
       $(this).attr('selected', false);
@@ -157,8 +161,12 @@ function showDepartamentos(){
     capaDistritos.remove(feature);
   });
 
+  capaCP.forEach(function (feature) {
+    capaCP.remove(feature);
+  });
 
-  capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=', null, function(event){
+
+  capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
     //chartData = [];
     chartMultiData = [];
@@ -185,11 +193,8 @@ function showDepartamentos(){
   capaDepartamentos.addListener('mouseover', function(event) {
     capaDepartamentos.revertStyle();
     capaDepartamentos.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
-    
 
-    let IDI_DEP = event.feature.getProperty('ID_DEP');
-
-    $(".chart__table").find("table tbody tr#" + IDI_DEP ).addClass('success');
+    $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_DEP') ).addClass('success');
 
     //console.log(IDI_DEP);
 
@@ -206,8 +211,7 @@ function showDepartamentos(){
   //console.log(capaDepartamentos);
 }
 
-function showProvincias(id){
-  cleanForm('dep');
+function showProvincias(id, deno){
 
   capaDepartamentos.forEach(function (feature) {
     capaDepartamentos.remove(feature);
@@ -221,17 +225,22 @@ function showProvincias(id){
     capaDistritos.remove(feature);
   });
 
-  depID = id;
+  capaCP.forEach(function (feature) {
+    capaCP.remove(feature);
+  });
+
+  //depID = id;
 
   $("#ddlDepartamento option").each(function(){
-    if($(this).val() == depID){
-      $(this).attr('selected', true);    
+    if($(this).val() === id){
+      $(this).attr('selected', true);
+      console.log(id);    
     }else{
       $(this).attr('selected', false);
     }
   });
 
-  capaProvincias.loadGeoJson('/provincias?deps=' + depID + '&provs=');
+  capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno);
 
   capaProvincias.setMap(map);
 
@@ -256,9 +265,11 @@ function showProvincias(id){
     map.fitBounds(bounds);
     map.setZoom(7);
   });
+
+  cleanForm('dep');
 }
 
-function showDistritos(id){
+function showDistritos(id, deno){
   capaDepartamentos.forEach(function (feature) {
     capaDepartamentos.remove(feature);
   });
@@ -271,17 +282,21 @@ function showDistritos(id){
     capaDistritos.remove(feature);
   });
 
+  capaCP.forEach(function (feature) {
+    capaCP.remove(feature);
+  });
+
   provID = id;
 
-  $("#ddlDistrito option").each(function(){
-    if($(this).val() == provID){
+  $("#ddlProvincia option").each(function(){
+    if($(this).val() === provID){
       $(this).attr('selected', true);    
     }else{
       $(this).attr('selected', false);
     }
   });
 
-  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=');
+  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' +deno);
 
   capaDistritos.setMap(map);
 
@@ -308,20 +323,63 @@ function showDistritos(id){
   });
 }
 
-function showCP(id){
+function showCP(id, deno){
   disID = id;
 
+  capaDepartamentos.forEach(function (feature) {
+    capaDepartamentos.remove(feature);
+  });
+
+  capaProvincias.forEach(function (feature) {
+    capaProvincias.remove(feature);
+  });
+
+  capaDistritos.forEach(function (feature) {
+    capaDistritos.remove(feature);
+  });
+
+  capaCP.forEach(function (feature) {
+    capaCP.remove(feature);
+  });
+
   $("#ddlDistrito option").each(function(){
-    if($(this).val() == disID){
+    if($(this).val() === disID){
       $(this).attr('selected', true);    
     }else{
       $(this).attr('selected', false);
     }
   });
+
+  capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno);
+
+  capaCP.setMap(map);
+
+  capaCP.setStyle({
+    strokeColor: '#d3cc18',
+    fillColor: '#d3cc18',
+    strokeWeight: 1
+  });
+
+  capaCP.addListener('mouseover', function(event) {
+    capaCP.revertStyle();
+    capaCP.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+  });
+
+  capaCP.addListener('mouseout', function(event) {
+    capaCP.revertStyle();
+  });
+
+  capaCP.addListener('addfeature', function(event) {
+    let bounds = new google.maps.LatLngBounds();
+    processPoints(event.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+    map.setZoom(10);
+  });
+
 }
 
 function cleanForm(ex){
-  $('.search').find('form').trigger("reset");
+  //$('.search').find('form').trigger("reset");
   switch(ex) {
     case 'dep':
         $("#ddlProvincia").val('00').change();
@@ -347,18 +405,44 @@ function cleanForm(ex){
   }
 }
 
+function search(){
+    let denoInput = $('#txtDenom').val();
+
+    if ( $('#ddlDepartamento').val() != null && $('#ddlProvincia').val() != null && $('#ddlDistrito').val() != null ) { //Todos seleccionados
+      let disID = $("#ddlDistrito").val();
+      showCP(disID, denoInput);
+      console.log('Buscando ' + denoInput + ' en el distrito ' + disID);
+    } else if ($('#ddlDepartamento').val() != null && $('#ddlProvincia').val() != null && $('#ddlDistrito').val() === null) { //Departamento => Provincia
+      let provID = $("#ddlProvincia").val();
+      showDistritos(provID, denoInput);
+      console.log('Buscando ' + denoInput + ' en la provincia ' + provID);
+    } else if ($('#ddlDepartamento').val() != null && $('#ddlProvincia').val() === null && $('#ddlDistrito').val() === null) { //Departamento
+      cleanForm('dep');
+      let depID = $("#ddlDepartamento").val();
+      showProvincias(depID, denoInput);
+      console.log('Buscando ' + denoInput + ' en el departamento ' + depID);
+    }else{
+      showDepartamentos(denoInput);
+      console.log('Buscando ' + denoInput + ' en todos los departamentos');
+    }
+}
+
+$('#btnBuscar').click(function(e){
+  e.preventDefault();
+  search();
+});
+
 $('#btnLimpiar').click(function(){
   cleanForm();
 
-  showDepartamentos();
+  showDepartamentos('');
 });
 
-showDepartamentos();
+showDepartamentos('');
 
 
 capaDepartamentos.addListener('click', function(event) {
   depID = event.feature.getProperty('ID_DEP');
-
   // capaDepartamentos.forEach(function (feature) {
   //   capaDepartamentos.remove(feature);
   // });
@@ -430,7 +514,7 @@ $( document ).ready(function() {
         $("#ddlDepartamento").empty();
         $("#ddlDepartamento").append("<option value='00' disabled selected>Seleccione</option>");
         $.each(resultado, function (index, value) {
-          if( value.ID_DEP === '03' || value.ID_DEP === '05' || value.ID_DEP === '09' || value.ID_DEP === '12' || value.ID_DEP === '19' ){
+          if( value.ID_DEP === '03' || value.ID_DEP === '05' || value.ID_DEP === '09' || value.ID_DEP === '10' || value.ID_DEP === '12' || value.ID_DEP === '19' ){
             $("#ddlDepartamento").append("<option value=" + value.ID_DEP + ">" + value.NOM_DEP + "</option>");
           }
         });
@@ -442,12 +526,8 @@ $( document ).ready(function() {
 
 
     $("#ddlDepartamento").change(function(event){
-
-      depID = $(this).val();
       
-      showProvincias(depID);
-
-
+      showProvincias($(this).val(), $('#txtDenom').val());
 
       $.ajax({
         url: 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarProvinciascombo',
@@ -472,10 +552,8 @@ $( document ).ready(function() {
       });
     });
 
-    $("#ddlProvincia").change(function(){
-      provID = $(this).val();
-      
-      showDistritos(provID);
+    $("#ddlProvincia").change(function(){     
+      showDistritos($(this).val(), $('#txtDenom').val());
 
       $.ajax({
         url: 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarDistritoscombo',
@@ -500,9 +578,13 @@ $( document ).ready(function() {
       });
     });
 
-    $("#ddlDistrito").change(function(){
-      disID = $(this).val();
-      
-      showCP(disID);
+    $("#ddlDistrito").change(function(){    
+      showCP($(this).val(), $('#txtDenom').val());
     });
+});
+
+$(window).on("load", function() {
+  $('.spinner-wrapper').hide();
+  $('.chart__table').show();
+  $('.chart__image').show();
 });

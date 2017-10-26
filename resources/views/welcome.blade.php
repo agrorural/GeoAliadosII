@@ -53,6 +53,12 @@
                 <div id="map"></div>
             </div>
             <div class="chart">
+              <div class="spinner-wrapper">
+                <div class="spinner">
+                  <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
                 <div class="chart__table" style="height: 300px; margin-bottom: 30px;">
                   <table class="table table-striped table-bordered table-hover table-responsive">
                     <thead class="thead-dark">
