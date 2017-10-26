@@ -5,8 +5,14 @@ let depID = '';
 let proID = '';
 let disID = '';
 
+function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
+
 map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 5,
+  zoom: 6,
   center: {lat: -12.079652, lng: -77.042575},
   styles: [
         {elementType: 'geometry', stylers: [{color: '#f5f1e6'}]},
@@ -154,20 +160,20 @@ function showDepartamentos(){
 
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=', null, function(event){
     //console.log(event);
-    chartData = [];
-    setData = [];
+    //chartData = [];
+    chartMultiData = [];
     
     $('.chart__table').find("table tbody").empty();
     event.forEach(function(feature){
-      chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
-      setData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
-      console.log(feature.f);
-      $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + feature.f.Inversion_pdn + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + feature.f.Inversion_pdnc + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + feature.f.Inversion_pdt + '</td></tr>');
+      //chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
+      chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+      //console.log(numberWithCommas(feature.f.Inversion_pdn));
+      $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdn) + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdnc) + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdt) + '</td></tr>');
     });
 
-    new Chartkick.ColumnChart("columnchart_material", setData, {legend: "bottom"});
+    new Chartkick.ColumnChart("columnchart_material", chartMultiData, {legend: "bottom"});
 
-    console.log(setData);
+    //console.log(chartMultiData);
   });
 
   capaDepartamentos.setStyle({
@@ -195,7 +201,7 @@ function showDepartamentos(){
   });
 
   capaDepartamentos.setMap(map);
-  map.setZoom(5);
+  map.setZoom(6);
 
   //console.log(capaDepartamentos);
 }
