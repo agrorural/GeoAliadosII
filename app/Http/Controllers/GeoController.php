@@ -87,14 +87,14 @@ class GeoController extends Controller
             header('Access-Control-Allow-Credentials: true');  
             header('Access-Control-Max-Age: 86400');   
         }  
-
+          
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {  
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))  
-            header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");  
-
-        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))  
-            header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");  
+          
+            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))  
+                header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");  
+          
+            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))  
+                header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");  
         }
 
         $url = 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarProvincias';
@@ -128,7 +128,7 @@ class GeoController extends Controller
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
         for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOM_PROV":"'.$object[$x]->NOM_PROV.'","ID_PROV":"'.$object[$x]->ID_PROV.'"},';
+            echo '{"type":"Feature","properties":{"NOM_PROV":"'.$object[$x]->NOM_PROV.'","ID_PROV":"'.$object[$x]->ID_PROV.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){

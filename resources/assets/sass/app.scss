@@ -14,8 +14,12 @@ html, body {
 	padding: 0;
 }
 
-#map {
-	height: 630px;
+.input-group-btn.input-group-btn-with-label{
+	vertical-align: bottom;
+}
+
+#map, .map{
+	height: 930px;
 }
 
 #app{
@@ -26,9 +30,9 @@ html, body {
 			form{
 				@extend .row;
 				.form-group{
-					@extend .col-sm-1;
+					@extend .col-sm-2;
 					&.txtDenom{
-						@extend .col-sm-3;
+						@extend .col-sm-2;
 					}
 					&.btn-group{
 						@extend .col-sm-2;
@@ -44,7 +48,22 @@ html, body {
 		}
 		.chart{
 			@extend .col-sm-6;
-			height: 630px;
+			height: 930px;
+			.chart__table{
+				@extend .row;
+				.dataTables_wrapper{
+					@extend .col-sm-12;
+					.dataTables_length{
+						@extend .col-sm-6;
+					}
+					.dataTables_filter{
+						@extend .col-sm-6;
+					}
+					.table{
+						width: 100% !important;
+					}
+				}
+			}
 		}
 	}
 }
@@ -54,6 +73,8 @@ html, body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background-color: #FFFFFF;
+	opacity: .75;
 }
 
 .spinner-wrapper .spinner{

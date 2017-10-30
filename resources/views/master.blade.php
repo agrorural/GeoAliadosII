@@ -10,7 +10,6 @@
         <!--Load the AJAX API-->
         <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartkick/2.2.4/chartkick.js"></script>
-        <script src="https://use.fontawesome.com/00e9311fd7.js"></script>
         @yield('head')
     </head>
     <body>
@@ -25,7 +24,8 @@
         @yield('footer')
         <script src="{{ mix('js/app.js') }}"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxwYkZXk1iIQaP7W2VB8IKeRjtgpsGqS4"></script>
+        <script src="https://use.fontawesome.com/00e9311fd7.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
         <script src="{{ mix('js/map.js') }}"></script>
-        
     </body>
 </html>

@@ -5,8 +5,18 @@ let deno = '';
 let depID = '';
 let proID = '';
 let disID = '';
-$('.chart__table').hide();
-$('.chart__image').hide();
+
+function initialState(){
+  $('.spinner-wrapper').show();
+  $(".chart__table").html('');
+  $(".chart__image").html('');
+}
+
+initialState();
+
+function loadState(){
+    $('.spinner-wrapper').hide();
+}
 
 function numberWithCommas(x) {
     var parts = x.toString().split(".");
@@ -135,9 +145,15 @@ let capaDistritos = new google.maps.Data();
 let capaCP = new google.maps.Data();
 
 let dataDepartamentos = null;
+let dataProvincias = null;
 
 function showDepartamentos(deno){
-  cleanForm();
+  //cleanForm('all');
+  $("#ddlDistrito").empty();
+  $("#ddlDistrito").append("<option value='00' disabled selected>Seleccione</option>");
+  $("#ddlProvincia").empty();
+  $("#ddlProvincia").append("<option value='00' disabled selected>Seleccione</option>");
+  initialState();
 
   depID = '00';
 
@@ -165,23 +181,67 @@ function showDepartamentos(deno){
     capaCP.remove(feature);
   });
 
-
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
-    //chartData = [];
-    chartMultiData = [];
+    $(".chart__table").html(`
+      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive">
+        <thead class="thead-dark">
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    `);
+
+    $(".chart__image").html(`
+      <div id="chartDep" style="height:450px"></div>
+    `);
+
+    let tableData = [];
+    let chartMultiData = [];
+
+    $(".chart__table").find("table thead").append(`
+      <tr>
+        <th rowspan="2">ID</th>
+        <th rowspan="2">Departamento</th>
+        <th colspan="2">PDN</th>
+        <th colspan="2">PDNC</th>
+        <th colspan="2">PDT</th>
+      </tr>
+      <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+      </tr>
+    `);
     
-    $('.chart__table').find("table tbody").empty();
     event.forEach(function(feature){
-      //chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
+      tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
       chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
       //console.log(numberWithCommas(feature.f.Inversion_pdn));
-      $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdn) + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdnc) + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdt) + '</td></tr>');
     });
 
-    new Chartkick.ColumnChart("columnchart_material", chartMultiData, {legend: "bottom"});
+    $(function() {
+      loadState();
+      
+      $('#tblDep').DataTable( {
+        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+            $(nRow).attr('id', aData[0]);
+        }, 
+          data: tableData,
+          "columnDefs": [ {
+            "targets": 0,
+            "visible": false
+          } ]
+      } );
 
-    //console.log(chartMultiData);
+      new Chartkick.ColumnChart("chartDep", chartMultiData, {legend: "bottom"});
+    });
+
+    //console.log(tableData);
+
   });
 
   capaDepartamentos.setStyle({
@@ -208,7 +268,6 @@ function showDepartamentos(deno){
   capaDepartamentos.setMap(map);
   map.setZoom(6);
 
-  //console.log(capaDepartamentos);
 }
 
 function showProvincias(id, deno){
@@ -229,18 +288,76 @@ function showProvincias(id, deno){
     capaCP.remove(feature);
   });
 
-  //depID = id;
-
   $("#ddlDepartamento option").each(function(){
     if($(this).val() === id){
       $(this).attr('selected', true);
-      console.log(id);    
+      //console.log(id);    
     }else{
       $(this).attr('selected', false);
     }
   });
 
-  capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno);
+  capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno, null, function(event){
+    console.log(event);
+    $(".chart__table").html(`
+      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive">
+        <thead class="thead-dark">
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    `);
+
+    $(".chart__image").html(`
+      <div id="chartProv" style="height:450px"></div>
+    `);
+
+    let tableData = [];
+    let chartMultiData = [];
+
+    $(".chart__table").find("table thead").append(`
+      <tr>
+        <th rowspan="2">ID</th>
+        <th rowspan="2">Provincia</th>
+        <th colspan="2">PDN</th>
+        <th colspan="2">PDNC</th>
+        <th colspan="2">PDT</th>
+      </tr>
+      <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+      </tr>
+    `);
+    
+    event.forEach(function(feature){
+      tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+      chartMultiData.push({name: feature.f.NOM_PROV, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+      //console.log(numberWithCommas(feature.f.Inversion_pdn));
+    });
+
+    $(function() {
+      loadState();
+      
+      $('#tblProv').DataTable( {
+        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+            $(nRow).attr('id', aData[0]);
+        }, 
+          data: tableData,
+          "columnDefs": [ {
+            "targets": 0,
+            "visible": false
+          } ]
+      } );
+
+      new Chartkick.ColumnChart("chartProv", chartMultiData, {legend: "bottom"});
+    });
+
+    //console.log(tableData);
+  });
 
   capaProvincias.setMap(map);
 
@@ -296,7 +413,28 @@ function showDistritos(id, deno){
     }
   });
 
-  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' +deno);
+  //capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' +deno);
+  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno, null, function(event){
+    //console.log(event);
+    //chartData = [];
+    chartMultiData = [];
+    
+    $('.chart__table').find("table tbody").empty();
+    // event.forEach(function(feature){
+    //   //chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
+    //   chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+    //   //console.log(numberWithCommas(feature.f.Inversion_pdn));
+    //   $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdn) + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdnc) + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdt) + '</td></tr>');
+    // });
+
+    //new Chartkick.ColumnChart("columnchart_material", chartMultiData, {legend: "bottom"});
+
+    //console.log(chartMultiData);
+
+    $('.chart__image').find('#columnchart_material').empty();
+
+    loadState();
+  });
 
   capaDistritos.setMap(map);
 
@@ -378,31 +516,8 @@ function showCP(id, deno){
 
 }
 
-function cleanForm(ex){
-  //$('.search').find('form').trigger("reset");
-  switch(ex) {
-    case 'dep':
-        $("#ddlProvincia").val('00').change();
-        $("#ddlDistrito").empty();
-        $("#ddlDistrito").append("<option value='00' disabled selected>Seleccione</option>");
-        break;
-    case 'pro':
-        $("#ddlDepartamento").val('00').change();
-        $("#ddlDistrito").val('00').change();
-        break;
-    case 'dis':
-        $("#ddlDepartamento").val('00').change();
-        $("#ddlProvincia").val('00').change();
-        break;
-    default:
-        $("#ddlDepartamento").val('00').change();
-
-        //console.log($("#ddlDepartamento").val());
-        $("#ddlProvincia").empty();
-        $("#ddlProvincia").append("<option value='00' disabled selected>Seleccione</option>");
-        $("#ddlDistrito").empty();
-        $("#ddlDistrito").append("<option value='00' disabled selected>Seleccione</option>");
-  }
+function cleanForm(){
+  $('#txtDenom').val('');
 }
 
 function search(){
@@ -429,12 +544,14 @@ function search(){
 
 $('#btnBuscar').click(function(e){
   e.preventDefault();
+  //initialState();
   search();
 });
 
 $('#btnLimpiar').click(function(){
+  //debugger;
+  //initialState();
   cleanForm();
-
   showDepartamentos('');
 });
 
@@ -526,7 +643,7 @@ $( document ).ready(function() {
 
 
     $("#ddlDepartamento").change(function(event){
-      
+      initialState();
       showProvincias($(this).val(), $('#txtDenom').val());
 
       $.ajax({
@@ -552,7 +669,8 @@ $( document ).ready(function() {
       });
     });
 
-    $("#ddlProvincia").change(function(){     
+    $("#ddlProvincia").change(function(){
+      initialState();     
       showDistritos($(this).val(), $('#txtDenom').val());
 
       $.ajax({
@@ -578,13 +696,8 @@ $( document ).ready(function() {
       });
     });
 
-    $("#ddlDistrito").change(function(){    
+    $("#ddlDistrito").change(function(){
+      initialState();    
       showCP($(this).val(), $('#txtDenom').val());
     });
-});
-
-$(window).on("load", function() {
-  $('.spinner-wrapper').hide();
-  $('.chart__table').show();
-  $('.chart__image').show();
 });
