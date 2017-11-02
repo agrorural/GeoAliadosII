@@ -6,6 +6,7 @@ let depID = '';
 let proID = '';
 let disID = '';
 
+
 function initialState(){
   $('.spinner-wrapper').show();
   $(".chart__table").html('');
@@ -25,7 +26,7 @@ function numberWithCommas(x) {
 }
 
 map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 6,
+  zoom: 8,
   center: {lat: -12.079652, lng: -77.042575},
   styles: [
         {elementType: 'geometry', stylers: [{color: '#f5f1e6'}]},
@@ -144,9 +145,6 @@ let capaProvincias = new google.maps.Data();
 let capaDistritos = new google.maps.Data();
 let capaCP = new google.maps.Data();
 
-let dataDepartamentos = null;
-let dataProvincias = null;
-
 function showDepartamentos(deno){
   //cleanForm('all');
   $("#ddlDistrito").empty();
@@ -184,7 +182,8 @@ function showDepartamentos(deno){
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
     $(".chart__table").html(`
-      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive">
+      <div class="page-header"><h3>Departamentos</h3></div>
+      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive table-condensed">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -193,6 +192,7 @@ function showDepartamentos(deno){
     `);
 
     $(".chart__image").html(`
+      <div class="page-header"><h3>Planes</h3></div>
       <div id="chartDep" style="height:450px"></div>
     `);
 
@@ -238,6 +238,10 @@ function showDepartamentos(deno){
       } );
 
       new Chartkick.ColumnChart("chartDep", chartMultiData, {legend: "bottom"});
+
+      let chartHeight= $('.chart').height()
+      $('#map').height(chartHeight);
+      console.log(chartHeight);
     });
 
     //console.log(tableData);
@@ -266,7 +270,7 @@ function showDepartamentos(deno){
   });
 
   capaDepartamentos.setMap(map);
-  map.setZoom(6);
+  map.setZoom(7);
 
 }
 
@@ -298,9 +302,10 @@ function showProvincias(id, deno){
   });
 
   capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno, null, function(event){
-    console.log(event);
+    //console.log(event);
     $(".chart__table").html(`
-      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive">
+      <div class="page-header"><h3>Provincias</h3></div>
+      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive table-condensed">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -309,6 +314,7 @@ function showProvincias(id, deno){
     `);
 
     $(".chart__image").html(`
+      <div class="page-header"><h3>Planes</h3></div>
       <div id="chartProv" style="height:450px"></div>
     `);
 
@@ -354,6 +360,10 @@ function showProvincias(id, deno){
       } );
 
       new Chartkick.ColumnChart("chartProv", chartMultiData, {legend: "bottom"});
+
+      let chartHeight= $('.chart').height()
+      $('#map').height(chartHeight);
+      console.log(chartHeight);
     });
 
     //console.log(tableData);
@@ -370,17 +380,19 @@ function showProvincias(id, deno){
   capaProvincias.addListener('mouseover', function(event) {
     capaProvincias.revertStyle();
     capaProvincias.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_PROV') ).addClass('success');
   });
 
   capaProvincias.addListener('mouseout', function(event) {
     capaProvincias.revertStyle();
+    $(".chart__table").find("table tbody tr").removeClass('success');
   });
 
   capaProvincias.addListener('addfeature', function(event) {
     let bounds = new google.maps.LatLngBounds();
     processPoints(event.feature.getGeometry(), bounds.extend, bounds);
     map.fitBounds(bounds);
-    map.setZoom(7);
+    map.setZoom(8);
   });
 
   cleanForm('dep');
@@ -413,27 +425,72 @@ function showDistritos(id, deno){
     }
   });
 
-  //capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' +deno);
-  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno, null, function(event){
+  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno, null, function(event){    
     //console.log(event);
-    //chartData = [];
-    chartMultiData = [];
+    $(".chart__table").html(`
+      <div class="page-header"><h3>Distritos</h3></div>
+      <table id="tblDis" class="table table-striped table-bordered table-hover table-responsive table-condensed">
+        <thead class="thead-dark">
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    `);
+
+    $(".chart__image").html(`
+      <div class="page-header"><h3>Planes</h3></div>
+      <div id="chartDis" style="height:450px"></div>
+    `);
+
+    let tableData = [];
+    let chartMultiData = [];
+
+    $(".chart__table").find("table thead").append(`
+      <tr>
+        <th rowspan="2">ID</th>
+        <th rowspan="2">Distrito</th>
+        <th colspan="2">PDN</th>
+        <th colspan="2">PDNC</th>
+        <th colspan="2">PDT</th>
+      </tr>
+      <tr>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+        <th scope="col">Nº</th>
+        <th scope="col">Inversión</th>
+      </tr>
+    `);
     
-    $('.chart__table').find("table tbody").empty();
-    // event.forEach(function(feature){
-    //   //chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Inversion_pdn)]);
-    //   chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
-    //   //console.log(numberWithCommas(feature.f.Inversion_pdn));
-    //   $('.chart__table').find("table tbody").append('<tr id="' + feature.f.ID_DEP + '"><th scope="row">' + feature.f.NOMBDEP + '</th><td>' + feature.f.Nro_pdn + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdn) + '</td><td>' + feature.f.Nro_pdnc + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdnc) + '</td><td>' + feature.f.Nro_pdt + '</td><td>S/. ' + numberWithCommas(feature.f.Inversion_pdt) + '</td></tr>');
-    // });
+    event.forEach(function(feature){
+      tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+      chartMultiData.push({name: feature.f.NOM_DIS, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+      //console.log(numberWithCommas(feature.f.Inversion_pdn));
+    });
 
-    //new Chartkick.ColumnChart("columnchart_material", chartMultiData, {legend: "bottom"});
+    $(function() {
+      loadState();
+      
+      $('#tblDis').DataTable( {
+        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+            $(nRow).attr('id', aData[0]);
+        }, 
+          data: tableData,
+          "columnDefs": [ {
+            "targets": 0,
+            "visible": false
+          } ]
+      } );
 
-    //console.log(chartMultiData);
+      new Chartkick.ColumnChart("chartDis", chartMultiData, {legend: "bottom"});
 
-    $('.chart__image').find('#columnchart_material').empty();
+      let chartHeight= $('.chart').height()
+      $('#map').height(chartHeight);
+      console.log(chartHeight);
+    });
 
-    loadState();
+    //console.log(tableData);
   });
 
   capaDistritos.setMap(map);
@@ -447,10 +504,12 @@ function showDistritos(id, deno){
   capaDistritos.addListener('mouseover', function(event) {
     capaDistritos.revertStyle();
     capaDistritos.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_DIS') ).addClass('success');
   });
 
   capaDistritos.addListener('mouseout', function(event) {
     capaDistritos.revertStyle();
+    $(".chart__table").find("table tbody tr").removeClass('success');
   });
 
   capaDistritos.addListener('addfeature', function(event) {
@@ -488,7 +547,77 @@ function showCP(id, deno){
     }
   });
 
-  capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno);
+  capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno, null, function(event){    
+    console.log(event);
+    $(".chart__table").html(`
+      <div class="page-header"><h3>Centro Poblado</h3></div>
+      <table id="tblCP" class="table table-striped table-bordered table-hover table-responsive table-condensed" styler="height:930px">
+        <thead class="thead-dark">
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    `);
+
+    $(".chart__image").html(`
+      <div class="page-header"><h3>Familias</h3></div>
+      <div id="chartCP" style="height:450px"></div>
+    `);
+
+    let tableData = [];
+    let chartMultiData = [];
+
+    $(".chart__table").find("table thead").append(`
+      <tr>
+        <th>ID</th>
+        <th>Demonimación</th>
+        <th>Rubro</th>
+        <th>Línea</th>
+        <th>Familias</th>
+        <th>Organización</th>
+      </tr>
+    `);
+    let NRO_FAMILIAS_M = 0;
+    let NRO_FAMILIAS_F = 0;
+    let NRO_FAMILIAS = 0;
+    event.forEach(function(feature){
+      NRO_FAMILIAS_M += parseInt(feature.f.NRO_FAMILIAS_M);
+      NRO_FAMILIAS_F += parseInt(feature.f.NRO_FAMILIAS_F);
+      NRO_FAMILIAS += parseInt(feature.f.NRO_FAMILIAS);
+      tableData.push([feature.f.CODCP, feature.f.DENOMINACION, feature.f.RUBRO, feature.f.LINEA_ESPECIFICA, feature.f.NRO_FAMILIAS, feature.f.ORGANIZACION]);
+      
+      //tableData.push([feature.f.CODCP, feature.f.NOMCP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+      //console.log(numberWithCommas(feature.f.Inversion_pdn));
+    });
+
+    console.log(NRO_FAMILIAS_M);
+    console.log(NRO_FAMILIAS_F);
+    console.log(NRO_FAMILIAS);
+
+    $(function() {
+      loadState();
+      //$(".chart__image").css('display', 'none');
+      
+      $('#tblCP').DataTable( {
+        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+            $(nRow).attr('class', aData[0]);
+        }, 
+          data: tableData,
+          "columnDefs": [ {
+            "targets": 0,
+            "visible": false
+          } ]
+      } );
+
+      new Chartkick.PieChart("chartCP", [["Hombes", NRO_FAMILIAS_M], ["Mujeres", NRO_FAMILIAS_F]], {donut: true});
+
+      let chartHeight= $('.chart').height()
+      $('#map').height(chartHeight);
+      console.log(chartHeight);
+    });
+
+    //console.log(tableData);
+  });
 
   capaCP.setMap(map);
 
@@ -616,7 +745,7 @@ function processPoints(geometry, callback, thisArg) {
   }
 }
 
-$( document ).ready(function() {
+$(document).ready(function() {
     $.ajax({
       url: 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarDepartamentoscombo',
       data: "{}",

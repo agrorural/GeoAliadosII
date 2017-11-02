@@ -45,7 +45,7 @@
                 </form>
             </div>
             <div class="map">
-                <div id="map"></div>
+                <div id="map" style="height: 900px"></div>
             </div>
             <div class="chart">
               <div class="spinner-wrapper">
@@ -54,9 +54,9 @@
                   <span class="sr-only">Loading...</span>
                 </div>
               </div>
-                <div class="chart__table" style="height:450px; margin-bottom: 30px;">
+                <div class="chart__table" style="margin-bottom: 30px;">
                 </div>
-                <div class="chart__image" style="height:450px">
+                <div class="chart__image" style="">
                 </div>
             </div>
         </div>

@@ -198,7 +198,7 @@ class GeoController extends Controller
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
         for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOM_DIS":"'.$object[$x]->NOM_DIS.'","ID_DIS":"'.$object[$x]->ID_DIS.'"},';
+            echo '{"type":"Feature","properties":{"NOM_DIS":"'.$object[$x]->NOM_DIS.'","ID_DIS":"'.$object[$x]->ID_DIS.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){
@@ -272,7 +272,7 @@ class GeoController extends Controller
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
         for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOMCP":"'.$object[$x]->NOMCP.'","CODCP":"'.$object[$x]->CODCP.'"},';
+            echo '{"type":"Feature","properties":{"NOMCP":"'.$object[$x]->NOMCP.'","CODCP":"'.$object[$x]->CODCP.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'","DENOMINACION":"'.$object[$x]->DENOMINACION.'","RUBRO":"'.$object[$x]->RUBRO.'","LINEA_ESPECIFICA":"'.$object[$x]->LINEA_ESPECIFICA.'","NRO_FAMILIAS":"'.$object[$x]->NRO_FAMILIAS.'","ORGANIZACION":"'.$object[$x]->ORGANIZACION.'","NRO_FAMILIAS_M":"'.$object[$x]->NRO_FAMILIAS_M.'","NRO_FAMILIAS_F":"'.$object[$x]->NRO_FAMILIAS_F.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){
