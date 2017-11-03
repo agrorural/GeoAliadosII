@@ -218,15 +218,18 @@ function showDepartamentos(deno){
     `);
     
     event.forEach(function(feature){
+
       tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
       chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
       //console.log(numberWithCommas(feature.f.Inversion_pdn));
+      console.log(feature);
     });
 
     $(function() {
       loadState();
       
       $('#tblDep').DataTable( {
+        "order": [[ 2, "desc" ]],
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -248,19 +251,21 @@ function showDepartamentos(deno){
 
   });
 
-  capaDepartamentos.setStyle({
-    strokeColor: 'red',
-    fillColor: 'red',
-    strokeWeight: 1
+ capaDepartamentos.setStyle(function(feature) {
+  console.log(feature);
+    return /** @type {google.maps.Data.StyleOptions} */({
+      strokeColor: feature.getProperty('color'),
+      fillColor: feature.getProperty('color'),
+      fillOpacity: 0.7,
+      strokeWeight: 1
+    });
   });
 
   capaDepartamentos.addListener('mouseover', function(event) {
     capaDepartamentos.revertStyle();
-    capaDepartamentos.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    capaDepartamentos.overrideStyle(event.feature, {fillOpacity: 1});
 
     $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_DEP') ).addClass('success');
-
-    //console.log(IDI_DEP);
 
   });
 
@@ -270,7 +275,7 @@ function showDepartamentos(deno){
   });
 
   capaDepartamentos.setMap(map);
-  map.setZoom(7);
+  map.setZoom(6);
 
 }
 
@@ -349,6 +354,7 @@ function showProvincias(id, deno){
       loadState();
       
       $('#tblProv').DataTable( {
+        "order": [[ 2, "desc" ]],
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -371,15 +377,19 @@ function showProvincias(id, deno){
 
   capaProvincias.setMap(map);
 
-  capaProvincias.setStyle({
-    strokeColor: 'orange',
-    fillColor: 'orange',
-    strokeWeight: 1
+ capaProvincias.setStyle(function(feature) {
+  console.log(feature);
+    return /** @type {google.maps.Data.StyleOptions} */({
+      strokeColor: feature.getProperty('color'),
+      fillColor: feature.getProperty('color'),
+      fillOpacity: 0.7,
+      strokeWeight: 1
+    });
   });
 
   capaProvincias.addListener('mouseover', function(event) {
     capaProvincias.revertStyle();
-    capaProvincias.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    capaProvincias.overrideStyle(event.feature, {fillOpacity: 1});
     $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_PROV') ).addClass('success');
   });
 
@@ -473,6 +483,7 @@ function showDistritos(id, deno){
       loadState();
       
       $('#tblDis').DataTable( {
+        "order": [[ 2, "desc" ]],
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -495,15 +506,19 @@ function showDistritos(id, deno){
 
   capaDistritos.setMap(map);
 
-  capaDistritos.setStyle({
-    strokeColor: '#d3cc18',
-    fillColor: '#d3cc18',
-    strokeWeight: 1
+  capaDistritos.setStyle(function(feature) {
+  console.log(feature);
+    return /** @type {google.maps.Data.StyleOptions} */({
+      strokeColor: feature.getProperty('color'),
+      fillColor: feature.getProperty('color'),
+      fillOpacity: 0.7,
+      strokeWeight: 1
+    });
   });
 
   capaDistritos.addListener('mouseover', function(event) {
     capaDistritos.revertStyle();
-    capaDistritos.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    capaDistritos.overrideStyle(event.feature, {fillOpacity: 1});
     $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_DIS') ).addClass('success');
   });
 

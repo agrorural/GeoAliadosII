@@ -60,19 +60,42 @@ class GeoController extends Controller
 
         $object = json_decode ($result);
 
-        //print_r($object);
+        $conta = 0;
+        $group = 1;
+        $color = ['#ea5903', '#f1935b', '#f7bd9a'];
+
+        $divisor = 3;
+
+        $vc = COUNT($object) / $divisor;
+        $mod = COUNT($object) % $divisor;
+
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
-        for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOMBDEP":"'.$object[$x]->NOM_DEP.'","ID_DEP":"'.$object[$x]->ID_DEP.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
+        for ($x=0; $x < COUNT($object) ; $x++) {
+
+            echo '{"type":"Feature","properties":{"color":"' . $color[$conta] . '","NOMBDEP":"'.$object[$x]->NOM_DEP.'","ID_DEP":"'.$object[$x]->ID_DEP.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){
                 echo ',';
             }
+
+            $group++;
+            if ($group > $vc) {
+                $conta++;
+                if($conta == $divisor){
+                    if($mod==0)
+                    $conta=0;
+                    else
+                        $conta--;
+                }
+                $group = 1;
+            }
+
         }
 
         echo ']}';
+
     }
 
     /**
@@ -124,15 +147,35 @@ class GeoController extends Controller
 
         $object = json_decode ($result);
 
-        //print_r($object);
+        $conta = 0;
+        $group = 1;
+        $color = ['#541B42', '#906b84', '#bba4b3'];
+
+        $divisor = 3;
+
+        $vc = COUNT($object) / $divisor;
+        $mod = COUNT($object) % $divisor;
+
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
         for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOM_PROV":"'.$object[$x]->NOM_PROV.'","ID_PROV":"'.$object[$x]->ID_PROV.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
+            echo '{"type":"Feature","properties":{"color":"' . $color[$conta] . '","NOM_PROV":"'.$object[$x]->NOM_PROV.'","ID_PROV":"'.$object[$x]->ID_PROV.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){
                 echo ',';
+            }
+
+            $group++;
+            if ($group > $vc) {
+                $conta++;
+                if($conta == $divisor){
+                    if($mod==0)
+                    $conta=0;
+                    else
+                        $conta--;
+                }
+                $group = 1;
             }
         }
 
@@ -194,15 +237,35 @@ class GeoController extends Controller
 
         $object = json_decode ($result);
 
-        //print_r($object);
+        $conta = 0;
+        $group = 1;
+        $color = ['#1492A1', '#66b8c2', '#a1d3d9'];
+
+        $divisor = 3;
+
+        $vc = COUNT($object) / $divisor;
+        $mod = COUNT($object) % $divisor;
+
         echo '{"type":"FeatureCollection","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[';
 
         for ($x = 0; $x < COUNT($object); $x++) {
-            echo '{"type":"Feature","properties":{"NOM_DIS":"'.$object[$x]->NOM_DIS.'","ID_DIS":"'.$object[$x]->ID_DIS.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
+            echo '{"type":"Feature","properties":{"color":"' . $color[$conta] . '","NOM_DIS":"'.$object[$x]->NOM_DIS.'","ID_DIS":"'.$object[$x]->ID_DIS.'","Nro_pdn":"'.$object[$x]->Nro_pdn.'","Inversion_pdn":"'.$object[$x]->Inversion_pdn.'","Nro_pdnc":"'.$object[$x]->Nro_pdnc.'","Inversion_pdnc":"'.$object[$x]->Inversion_pdnc.'","Nro_pdt":"'.$object[$x]->Nro_pdt.'","Inversion_pdt":"'.$object[$x]->Inversion_pdt.'"},';
             echo $object[$x]->JSON;
             echo '}';
             if($x <> (COUNT($object)-1)){
                 echo ',';
+            }
+
+            $group++;
+            if ($group > $vc) {
+                $conta++;
+                if($conta == $divisor){
+                    if($mod==0)
+                    $conta=0;
+                    else
+                        $conta--;
+                }
+                $group = 1;
             }
         }
 
