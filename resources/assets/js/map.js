@@ -178,13 +178,13 @@ function showDepartamentos(deno){
   capaCP.forEach(function (feature) {
     capaCP.remove(feature);
   });
-
+ 
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Departamentos</h3></div>
-      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
+      <table id="tblDep" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -226,7 +226,7 @@ function showDepartamentos(deno){
       tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
       chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
       //console.log(numberWithCommas(feature.f.Inversion_pdn));
-      console.log(feature);
+      //console.log(feature);
     });
 
     $(function() {
@@ -234,6 +234,30 @@ function showDepartamentos(deno){
       
       $('#tblDep').DataTable( {
         "order": [[ 2, "desc" ]],
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -248,7 +272,7 @@ function showDepartamentos(deno){
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
-      console.log(chartHeight);
+      //console.log(chartHeight);
     });
 
     //console.log(tableData);
@@ -256,7 +280,7 @@ function showDepartamentos(deno){
   });
 
  capaDepartamentos.setStyle(function(feature) {
-  console.log(feature);
+  //console.log(feature);
     return /** @type {google.maps.Data.StyleOptions} */({
       strokeColor: feature.getProperty('color'),
       fillColor: feature.getProperty('color'),
@@ -315,7 +339,7 @@ function showProvincias(id, deno){
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Provincias</h3></div>
-      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
+      <table id="tblProv" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -363,6 +387,30 @@ function showProvincias(id, deno){
       
       $('#tblProv').DataTable( {
         "order": [[ 2, "desc" ]],
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -377,7 +425,7 @@ function showProvincias(id, deno){
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
-      console.log(chartHeight);
+      //console.log(chartHeight);
     });
 
     //console.log(tableData);
@@ -386,7 +434,7 @@ function showProvincias(id, deno){
   capaProvincias.setMap(map);
 
  capaProvincias.setStyle(function(feature) {
-  console.log(feature);
+  //console.log(feature);
     return /** @type {google.maps.Data.StyleOptions} */({
       strokeColor: feature.getProperty('color'),
       fillColor: feature.getProperty('color'),
@@ -410,7 +458,7 @@ function showProvincias(id, deno){
     let bounds = new google.maps.LatLngBounds();
     processPoints(event.feature.getGeometry(), bounds.extend, bounds);
     map.fitBounds(bounds);
-    map.setZoom(8);
+    map.setZoom(7);
   });
 
   cleanForm('dep');
@@ -448,10 +496,10 @@ function showDistritos(id, deno){
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Distritos</h3></div>
-      <table id="tblDis" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
+      <table id="tblDis" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
-        <tbody>
+        <tbody> table-condensed table-bordered
         </tbody>
       </table>
       </div>
@@ -496,6 +544,30 @@ function showDistritos(id, deno){
       
       $('#tblDis').DataTable( {
         "order": [[ 2, "desc" ]],
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('id', aData[0]);
         }, 
@@ -510,7 +582,7 @@ function showDistritos(id, deno){
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
-      console.log(chartHeight);
+      //console.log(chartHeight);
     });
 
     //console.log(tableData);
@@ -519,7 +591,7 @@ function showDistritos(id, deno){
   capaDistritos.setMap(map);
 
   capaDistritos.setStyle(function(feature) {
-  console.log(feature);
+  //console.log(feature);
     return /** @type {google.maps.Data.StyleOptions} */({
       strokeColor: feature.getProperty('color'),
       fillColor: feature.getProperty('color'),
@@ -543,7 +615,7 @@ function showDistritos(id, deno){
     let bounds = new google.maps.LatLngBounds();
     processPoints(event.feature.getGeometry(), bounds.extend, bounds);
     map.fitBounds(bounds);
-    map.setZoom(9);
+    map.setZoom(8);
   });
 }
 
@@ -575,11 +647,11 @@ function showCP(id, deno){
   });
 
   capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno, null, function(event){    
-    console.log(event);
+    //console.log(event);
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Centro Poblado</h3></div>
-      <table id="tblCP" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
+      <table id="tblCP" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -601,50 +673,68 @@ function showCP(id, deno){
     $(".chart__table").find("table thead").append(`
       <tr>
         <th>ID</th>
-        <th>Demonimación</th>
         <th>Rubro</th>
-        <th>Línea</th>
-        <th>Familias</th>
-        <th>Organización</th>
+        <th>Linea</th>
+        <th>Demonimación</th>
       </tr>
     `);
     let NRO_FAMILIAS_M = 0;
     let NRO_FAMILIAS_F = 0;
     let NRO_FAMILIAS = 0;
     event.forEach(function(feature){
+      console.log(feature);
+
       NRO_FAMILIAS_M += parseInt(feature.f.NRO_FAMILIAS_M);
       NRO_FAMILIAS_F += parseInt(feature.f.NRO_FAMILIAS_F);
       NRO_FAMILIAS += parseInt(feature.f.NRO_FAMILIAS);
-      tableData.push([feature.f.CODCP, feature.f.DENOMINACION, feature.f.RUBRO, feature.f.LINEA_ESPECIFICA, feature.f.NRO_FAMILIAS, feature.f.ORGANIZACION]);
+      tableData.push([feature.f.CODCP, feature.f.RUBRO, feature.f.LINEA_ESPECIFICA, feature.f.DENOMINACION]);
       
-      //tableData.push([feature.f.CODCP, feature.f.NOMCP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
-      //console.log(numberWithCommas(feature.f.Inversion_pdn));
     });
-
-    console.log(NRO_FAMILIAS_M);
-    console.log(NRO_FAMILIAS_F);
-    console.log(NRO_FAMILIAS);
 
     $(function() {
       loadState();
-      //$(".chart__image").css('display', 'none');
       
       $('#tblCP').DataTable( {
+        "language": {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        },
+        data: tableData,
         "fnCreatedRow": function( nRow, aData, iDataIndex ) {
             $(nRow).attr('class', aData[0]);
-        }, 
-          data: tableData,
-          "columnDefs": [ {
-            "targets": 0,
-            "visible": false
-          } ]
+        },
+        "columnDefs": [ {
+          "targets": 0,
+          "visible": false
+        } ]
+
       } );
 
       new Chartkick.PieChart("chartCP", [["Hombes", NRO_FAMILIAS_M], ["Mujeres", NRO_FAMILIAS_F]], {donut: true});
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
-      console.log(chartHeight);
+      //console.log(chartHeight);
     });
 
     //console.log(tableData);
