@@ -71,15 +71,13 @@ html, body {
 			@extend .col-sm-6;
 			.page-header{
 				margin: 0 auto;
-				text-align: center;
 				padding: 0;
-				background-color: $brand-primary;
+				background-color: white;
+				border-bottom: 0px solid transparent;
 				h3{
-					text-transform: uppercase;
-					color: white;
-					font-size: 14px;
-					margin: 0 auto;
-					padding: 5px 0;
+					color: $brand-primary;
+					padding: 10px 15px;
+					margin: 0;
 				}
 			}
 			.chart__table{
@@ -145,4 +143,8 @@ html, body {
 }
 
 .spinner-wrapper .spinner{
+}
+
+.form-control-sm{
+	@extend .input-sm;
 }

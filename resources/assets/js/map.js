@@ -13,6 +13,36 @@ function initialState(){
   $(".chart__image").html('');
 }
 
+function removeAllFeatures(){
+  capaDepartamentos.forEach(function (feature) {
+    capaDepartamentos.remove(feature);
+  });
+
+  capaProvincias.forEach(function (feature) {
+    capaProvincias.remove(feature);
+  });
+
+  capaDistritos.forEach(function (feature) {
+    capaDistritos.remove(feature);
+  });
+
+  capaCP.forEach(function (feature) {
+    capaCP.remove(feature);
+  });
+}
+
+function processPoints(geometry, callback, thisArg) {
+  if (geometry instanceof google.maps.LatLng) {
+    callback.call(thisArg, geometry);
+  } else if (geometry instanceof google.maps.Data.Point) {
+    callback.call(thisArg, geometry.get());
+  } else {
+    geometry.getArray().forEach(function(g) {
+      processPoints(g, callback, thisArg);
+    });
+  }
+}
+
 initialState();
 
 function loadState(){
@@ -26,7 +56,7 @@ function numberWithCommas(x) {
 }
 
 map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 8,
+  zoom: 6,
   center: {lat: -12.079652, lng: -77.042575},
   styles: [
         {elementType: 'geometry', stylers: [{color: '#f5f1e6'}]},
@@ -163,21 +193,7 @@ function showDepartamentos(deno){
     }
   });
 
-  capaDepartamentos.forEach(function (feature) {
-    capaDepartamentos.remove(feature);
-  });
-
-  capaProvincias.forEach(function (feature) {
-    capaProvincias.remove(feature);
-  });
-
-  capaDistritos.forEach(function (feature) {
-    capaDistritos.remove(feature);
-  });
-
-  capaCP.forEach(function (feature) {
-    capaCP.remove(feature);
-  });
+removeAllFeatures();
  
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
@@ -309,21 +325,7 @@ function showDepartamentos(deno){
 
 function showProvincias(id, deno){
 
-  capaDepartamentos.forEach(function (feature) {
-    capaDepartamentos.remove(feature);
-  });
-
-  capaProvincias.forEach(function (feature) {
-    capaProvincias.remove(feature);
-  });
-
-  capaDistritos.forEach(function (feature) {
-    capaDistritos.remove(feature);
-  });
-
-  capaCP.forEach(function (feature) {
-    capaCP.remove(feature);
-  });
+removeAllFeatures();
 
   $("#ddlDepartamento option").each(function(){
     if($(this).val() === id){
@@ -335,6 +337,7 @@ function showProvincias(id, deno){
   });
 
   capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno, null, function(event){
+    
     //console.log(event);
     $(".chart__table").html(`
       <div class="chart__table-container">
@@ -431,11 +434,21 @@ function showProvincias(id, deno){
     //console.log(tableData);
   });
 
-  capaProvincias.setMap(map);
+  capaProvincias.addListener('addfeature', function(event) {
+    
+    capaProvincias.setMap(map);
 
- capaProvincias.setStyle(function(feature) {
+    let bounds = new google.maps.LatLngBounds();
+    processPoints(event.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+
+    map.setZoom(7);
+    
+  });
+
+  capaProvincias.setStyle(function(feature) {
   //console.log(feature);
-    return /** @type {google.maps.Data.StyleOptions} */({
+  return /** @type {google.maps.Data.StyleOptions} */({
       strokeColor: feature.getProperty('color'),
       fillColor: feature.getProperty('color'),
       fillOpacity: 0.7,
@@ -454,32 +467,12 @@ function showProvincias(id, deno){
     $(".chart__table").find("table tbody tr").removeClass('success');
   });
 
-  capaProvincias.addListener('addfeature', function(event) {
-    let bounds = new google.maps.LatLngBounds();
-    processPoints(event.feature.getGeometry(), bounds.extend, bounds);
-    map.fitBounds(bounds);
-    map.setZoom(7);
-  });
 
   cleanForm('dep');
 }
 
 function showDistritos(id, deno){
-  capaDepartamentos.forEach(function (feature) {
-    capaDepartamentos.remove(feature);
-  });
-
-  capaProvincias.forEach(function (feature) {
-    capaProvincias.remove(feature);
-  });
-
-  capaDistritos.forEach(function (feature) {
-    capaDistritos.remove(feature);
-  });
-
-  capaCP.forEach(function (feature) {
-    capaCP.remove(feature);
-  });
+  removeAllFeatures();
 
   provID = id;
 
@@ -499,7 +492,7 @@ function showDistritos(id, deno){
       <table id="tblDis" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
-        <tbody> table-condensed table-bordered
+        <tbody>
         </tbody>
       </table>
       </div>
@@ -583,12 +576,12 @@ function showDistritos(id, deno){
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
       //console.log(chartHeight);
+
+
     });
 
     //console.log(tableData);
   });
-
-  capaDistritos.setMap(map);
 
   capaDistritos.setStyle(function(feature) {
   //console.log(feature);
@@ -612,31 +605,18 @@ function showDistritos(id, deno){
   });
 
   capaDistritos.addListener('addfeature', function(event) {
+    capaDistritos.setMap(map);
     let bounds = new google.maps.LatLngBounds();
     processPoints(event.feature.getGeometry(), bounds.extend, bounds);
     map.fitBounds(bounds);
-    map.setZoom(8);
+    map.setZoom(9);
   });
 }
 
 function showCP(id, deno){
   disID = id;
 
-  capaDepartamentos.forEach(function (feature) {
-    capaDepartamentos.remove(feature);
-  });
-
-  capaProvincias.forEach(function (feature) {
-    capaProvincias.remove(feature);
-  });
-
-  capaDistritos.forEach(function (feature) {
-    capaDistritos.remove(feature);
-  });
-
-  capaCP.forEach(function (feature) {
-    capaCP.remove(feature);
-  });
+  removeAllFeatures();
 
   $("#ddlDistrito option").each(function(){
     if($(this).val() === disID){
@@ -675,19 +655,21 @@ function showCP(id, deno){
         <th>ID</th>
         <th>Rubro</th>
         <th>Linea</th>
+        <th>Familias</th>
         <th>Demonimación</th>
+        <th>Organización</th>
       </tr>
     `);
     let NRO_FAMILIAS_M = 0;
     let NRO_FAMILIAS_F = 0;
     let NRO_FAMILIAS = 0;
     event.forEach(function(feature){
-      console.log(feature);
+      //console.log(feature);
 
       NRO_FAMILIAS_M += parseInt(feature.f.NRO_FAMILIAS_M);
       NRO_FAMILIAS_F += parseInt(feature.f.NRO_FAMILIAS_F);
       NRO_FAMILIAS += parseInt(feature.f.NRO_FAMILIAS);
-      tableData.push([feature.f.CODCP, feature.f.RUBRO, feature.f.LINEA_ESPECIFICA, feature.f.DENOMINACION]);
+      tableData.push([feature.f.CODCP, feature.f.RUBRO, feature.f.LINEA_ESPECIFICA, parseInt(feature.f.NRO_FAMILIAS), feature.f.DENOMINACION, feature.f.ORGANIZACION]);
       
     });
 
@@ -740,24 +722,16 @@ function showCP(id, deno){
     //console.log(tableData);
   });
 
-  capaCP.setMap(map);
-
-  capaCP.setStyle({
-    strokeColor: '#d3cc18',
-    fillColor: '#d3cc18',
-    strokeWeight: 1
-  });
-
   capaCP.addListener('mouseover', function(event) {
-    capaCP.revertStyle();
-    capaCP.overrideStyle(event.feature, {fillColor:'#5a92a1',strokeColor:'#5a92a1',strokeWeight: 1});
+    $(".chart__table").find("table tbody tr." + event.feature.getProperty('CODCP')).addClass('success');
   });
 
   capaCP.addListener('mouseout', function(event) {
-    capaCP.revertStyle();
+     $(".chart__table").find("table tbody tr").removeClass("success");
   });
 
   capaCP.addListener('addfeature', function(event) {
+    capaCP.setMap(map);
     let bounds = new google.maps.LatLngBounds();
     processPoints(event.feature.getGeometry(), bounds.extend, bounds);
     map.fitBounds(bounds);
@@ -809,6 +783,7 @@ showDepartamentos('');
 
 
 capaDepartamentos.addListener('click', function(event) {
+  //console.log(event);
   depID = event.feature.getProperty('ID_DEP');
   // capaDepartamentos.forEach(function (feature) {
   //   capaDepartamentos.remove(feature);
@@ -854,17 +829,9 @@ capaDistritos.addListener('click', function(event) {
   //console.log(event.feature);
 });
 
-function processPoints(geometry, callback, thisArg) {
-  if (geometry instanceof google.maps.LatLng) {
-    callback.call(thisArg, geometry);
-  } else if (geometry instanceof google.maps.Data.Point) {
-    callback.call(thisArg, geometry.get());
-  } else {
-    geometry.getArray().forEach(function(g) {
-      processPoints(g, callback, thisArg);
-    });
-  }
-}
+capaCP.addListener('click', function(event){
+  console.log(event);
+});
 
 $(document).ready(function() {
     $.ajax({
@@ -890,7 +857,6 @@ $(document).ready(function() {
 
       }
     });
-
 
     $("#ddlDepartamento").change(function(event){
       initialState();
