@@ -182,18 +182,22 @@ function showDepartamentos(deno){
   capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
     $(".chart__table").html(`
+      <div class="chart__table-container">
       <div class="page-header"><h3>Departamentos</h3></div>
-      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive table-condensed">
+      <table id="tblDep" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
         <thead class="thead-dark">
         </thead>
         <tbody>
         </tbody>
       </table>
+      </div>
     `);
 
     $(".chart__image").html(`
+      <div class="chart__image-container">
       <div class="page-header"><h3>Planes</h3></div>
-      <div id="chartDep" style="height:450px"></div>
+      <div class="chartShow" id="chartDep" style="height:300px"></div>
+      </div>
     `);
 
     let tableData = [];
@@ -309,18 +313,22 @@ function showProvincias(id, deno){
   capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno, null, function(event){
     //console.log(event);
     $(".chart__table").html(`
+      <div class="chart__table-container">
       <div class="page-header"><h3>Provincias</h3></div>
-      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive table-condensed">
+      <table id="tblProv" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
         <thead class="thead-dark">
         </thead>
         <tbody>
         </tbody>
       </table>
+      </div>
     `);
 
     $(".chart__image").html(`
+      <div class="chart__image-container">
       <div class="page-header"><h3>Planes</h3></div>
-      <div id="chartProv" style="height:450px"></div>
+      <div class="chartShow" id="chartProv" style="height:300px"></div>
+      </div>
     `);
 
     let tableData = [];
@@ -438,18 +446,22 @@ function showDistritos(id, deno){
   capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno, null, function(event){    
     //console.log(event);
     $(".chart__table").html(`
+      <div class="chart__table-container">
       <div class="page-header"><h3>Distritos</h3></div>
-      <table id="tblDis" class="table table-striped table-bordered table-hover table-responsive table-condensed">
+      <table id="tblDis" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
         <thead class="thead-dark">
         </thead>
         <tbody>
         </tbody>
       </table>
+      </div>
     `);
 
     $(".chart__image").html(`
+      <div class="chart__image-container">
       <div class="page-header"><h3>Planes</h3></div>
-      <div id="chartDis" style="height:450px"></div>
+      <div class="chartShow" id="chartDis" style="height:300px"></div>
+      </div>
     `);
 
     let tableData = [];
@@ -565,18 +577,22 @@ function showCP(id, deno){
   capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno, null, function(event){    
     console.log(event);
     $(".chart__table").html(`
+      <div class="chart__table-container">
       <div class="page-header"><h3>Centro Poblado</h3></div>
-      <table id="tblCP" class="table table-striped table-bordered table-hover table-responsive table-condensed" styler="height:930px">
+      <table id="tblCP" class="table table-striped table-bordered table-hover table-responsive table-condensed dt-responsive nowrap">
         <thead class="thead-dark">
         </thead>
         <tbody>
         </tbody>
       </table>
+      </div>
     `);
 
     $(".chart__image").html(`
+      <div class="chart__image-container">
       <div class="page-header"><h3>Familias</h3></div>
-      <div id="chartCP" style="height:450px"></div>
+      <div class="chartShow" id="chartCP" style="height:300px"></div>
+      </div>
     `);
 
     let tableData = [];
