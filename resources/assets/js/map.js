@@ -2,6 +2,7 @@ let tipoMapa = 1;
 let map;
 let aliadosDepID = '03,05,09,10,12,19';
 let deno = '';
+let tipo = '';
 let depID = '';
 let proID = '';
 let disID = '';
@@ -175,8 +176,7 @@ let capaProvincias = new google.maps.Data();
 let capaDistritos = new google.maps.Data();
 let capaCP = new google.maps.Data();
 
-function showDepartamentos(deno){
-  //cleanForm('all');
+function showDepartamentos(deno, tipo){
   $("#ddlDistrito").empty();
   $("#ddlDistrito").append("<option value='00' disabled selected>Seleccione</option>");
   $("#ddlProvincia").empty();
@@ -193,14 +193,13 @@ function showDepartamentos(deno){
     }
   });
 
-removeAllFeatures();
+  removeAllFeatures();
  
-  capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno, null, function(event){
-    //console.log(event);
+  capaDepartamentos.loadGeoJson('/departamentos?deps=' + aliadosDepID + '&provs=&deno=' + deno + '&tipo=' + tipo, null, function(event){
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Departamentos</h3></div>
-      <table id="tblDep" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
+      <table id="tblDep" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -218,33 +217,105 @@ removeAllFeatures();
 
     let tableData = [];
     let chartMultiData = [];
+    let chartData = [];
 
-    $(".chart__table").find("table thead").append(`
-      <tr>
-        <th rowspan="2">ID</th>
-        <th rowspan="2">Departamento</th>
-        <th colspan="2">PDN</th>
-        <th colspan="2">PDNC</th>
-        <th colspan="2">PDT</th>
-      </tr>
-      <tr>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-      </tr>
-    `);
-    
-    event.forEach(function(feature){
+    switch(tipo) {
+        case 'PDN':
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Departamento</th>
+                <th colspan="2">PDN</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
 
-      tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
-      chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
-      //console.log(numberWithCommas(feature.f.Inversion_pdn));
-      //console.log(feature);
-    });
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn)]);
+              chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Nro_pdn)]);
+            });
 
+            new Chartkick.PieChart("chartDep", chartData);
+
+            break;
+
+        case 'PDNC':
+             $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Departamento</th>
+                <th colspan="2">PDNC</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc)]);
+              chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Nro_pdnc)]);
+            });
+
+            new Chartkick.PieChart("chartDep", chartData);
+
+            break;
+
+        case 'PDT':
+
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Departamento</th>
+                <th colspan="2">PDT</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+              chartData.push([feature.f.NOMBDEP, parseInt(feature.f.Nro_pdt)]);
+            });
+            
+            new Chartkick.PieChart("chartDep", chartData);
+
+            break;
+
+        default:
+        $(".chart__table").find("table thead").append(`
+          <tr>
+            <th rowspan="2">ID</th>
+            <th rowspan="2">Departamento</th>
+            <th colspan="2">PDN</th>
+            <th colspan="2">PDNC</th>
+            <th colspan="2">PDT</th>
+          </tr>
+          <tr>
+            <th scope="col">Nº</th>
+            <th scope="col">Inversión</th>
+            <th scope="col">Nº</th>
+            <th scope="col">Inversión</th>
+            <th scope="col">Nº</th>
+            <th scope="col">Inversión</th>
+          </tr>
+        `);
+
+        event.forEach(function(feature){
+          tableData.push([feature.f.ID_DEP, feature.f.NOMBDEP, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+          chartMultiData.push({name: feature.f.NOMBDEP, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+          //console.log(feature);
+        });
+
+        new Chartkick.ColumnChart("chartDep", chartMultiData, {legend: "bottom"});
+
+        //console.log('no hay tipo');
+    }
     $(function() {
       loadState();
       
@@ -284,20 +355,14 @@ removeAllFeatures();
           } ]
       } );
 
-      new Chartkick.ColumnChart("chartDep", chartMultiData, {legend: "bottom"});
-
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
       //console.log(chartHeight);
     });
-
-    //console.log(tableData);
-
   });
 
- capaDepartamentos.setStyle(function(feature) {
-  //console.log(feature);
-    return /** @type {google.maps.Data.StyleOptions} */({
+  capaDepartamentos.setStyle(function(feature) {
+    return ({
       strokeColor: feature.getProperty('color'),
       fillColor: feature.getProperty('color'),
       fillOpacity: 0.7,
@@ -308,9 +373,7 @@ removeAllFeatures();
   capaDepartamentos.addListener('mouseover', function(event) {
     capaDepartamentos.revertStyle();
     capaDepartamentos.overrideStyle(event.feature, {fillOpacity: 1});
-
     $(".chart__table").find("table tbody tr#" + event.feature.getProperty('ID_DEP') ).addClass('success');
-
   });
 
   capaDepartamentos.addListener('mouseout', function(event) {
@@ -323,9 +386,9 @@ removeAllFeatures();
 
 }
 
-function showProvincias(id, deno){
-
-removeAllFeatures();
+function showProvincias(id, deno, tipo){
+  $("#ddlDistrito").empty();
+  $("#ddlDistrito").append("<option value='00' disabled selected>Seleccione</option>");
 
   $("#ddlDepartamento option").each(function(){
     if($(this).val() === id){
@@ -336,13 +399,13 @@ removeAllFeatures();
     }
   });
 
-  capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno, null, function(event){
-    
-    //console.log(event);
+  removeAllFeatures();
+
+  capaProvincias.loadGeoJson('/provincias?deps=' + id + '&provs=&deno=' + deno + '&tipo=' + tipo, null, function(event){
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Provincias</h3></div>
-      <table id="tblProv" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
+      <table id="tblProv" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -359,31 +422,105 @@ removeAllFeatures();
     `);
 
     let tableData = [];
+    let chartData = [];
     let chartMultiData = [];
 
-    $(".chart__table").find("table thead").append(`
-      <tr>
-        <th rowspan="2">ID</th>
-        <th rowspan="2">Provincia</th>
-        <th colspan="2">PDN</th>
-        <th colspan="2">PDNC</th>
-        <th colspan="2">PDT</th>
-      </tr>
-      <tr>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-      </tr>
-    `);
-    
-    event.forEach(function(feature){
-      tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
-      chartMultiData.push({name: feature.f.NOM_PROV, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
-      //console.log(numberWithCommas(feature.f.Inversion_pdn));
-    });
+    switch(tipo) {
+        case 'PDN':
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Provincia</th>
+                <th colspan="2">PDN</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn)]);
+              chartData.push([feature.f.NOM_PROV, parseInt(feature.f.Nro_pdn)]);
+            });
+
+            new Chartkick.PieChart("chartProv", chartData);
+
+            break;
+
+        case 'PDNC':
+             $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Provincia</th>
+                <th colspan="2">PDNC</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc)]);
+              chartData.push([feature.f.NOM_PROV, parseInt(feature.f.Nro_pdnc)]);
+            });
+
+            new Chartkick.PieChart("chartProv", chartData);
+
+            break;
+
+        case 'PDT':
+
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Provincia</th>
+                <th colspan="2">PDT</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+              chartData.push([feature.f.NOM_PROV, parseInt(feature.f.Nro_pdt)]);
+            });
+            
+            new Chartkick.PieChart("chartProv", chartData);
+
+            break;
+
+        default:
+        
+              $(".chart__table").find("table thead").append(`
+                <tr>
+                  <th rowspan="2">ID</th>
+                  <th rowspan="2">Provincia</th>
+                  <th colspan="2">PDN</th>
+                  <th colspan="2">PDNC</th>
+                  <th colspan="2">PDT</th>
+                </tr>
+                <tr>
+                  <th scope="col">Nº</th>
+                  <th scope="col">Inversión</th>
+                  <th scope="col">Nº</th>
+                  <th scope="col">Inversión</th>
+                  <th scope="col">Nº</th>
+                  <th scope="col">Inversión</th>
+                </tr>
+              `);
+              
+              event.forEach(function(feature){
+                tableData.push([feature.f.ID_PROV, feature.f.NOM_PROV, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+                chartMultiData.push({name: feature.f.NOM_PROV, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+              });
+
+        new Chartkick.ColumnChart("chartProv", chartMultiData, {legend: "bottom"});
+
+    }
 
     $(function() {
       loadState();
@@ -424,36 +561,28 @@ removeAllFeatures();
           } ]
       } );
 
-      new Chartkick.ColumnChart("chartProv", chartMultiData, {legend: "bottom"});
-
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
       //console.log(chartHeight);
     });
 
-    //console.log(tableData);
-  });
-
-  capaProvincias.addListener('addfeature', function(event) {
-    
-    capaProvincias.setMap(map);
-
-    let bounds = new google.maps.LatLngBounds();
-    processPoints(event.feature.getGeometry(), bounds.extend, bounds);
-    map.fitBounds(bounds);
-
-    map.setZoom(7);
-    
   });
 
   capaProvincias.setStyle(function(feature) {
-  //console.log(feature);
-  return /** @type {google.maps.Data.StyleOptions} */({
-      strokeColor: feature.getProperty('color'),
-      fillColor: feature.getProperty('color'),
-      fillOpacity: 0.7,
-      strokeWeight: 1
-    });
+    return ({
+        strokeColor: feature.getProperty('color'),
+        fillColor: feature.getProperty('color'),
+        fillOpacity: 0.7,
+        strokeWeight: 1
+      });
+  });
+
+  capaProvincias.addListener('addfeature', function(event) { 
+    capaProvincias.setMap(map);
+    let bounds = new google.maps.LatLngBounds();
+    processPoints(event.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+    map.setZoom(7);
   });
 
   capaProvincias.addListener('mouseover', function(event) {
@@ -467,11 +596,9 @@ removeAllFeatures();
     $(".chart__table").find("table tbody tr").removeClass('success');
   });
 
-
-  cleanForm('dep');
 }
 
-function showDistritos(id, deno){
+function showDistritos(id, deno, tipo){
   removeAllFeatures();
 
   provID = id;
@@ -484,7 +611,7 @@ function showDistritos(id, deno){
     }
   });
 
-  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno, null, function(event){    
+  capaDistritos.loadGeoJson('/distritos?deps=&provs=' + provID + '&dis=&deno=' + deno + '&tipo=' + tipo, null, function(event){    
     //console.log(event);
     $(".chart__table").html(`
       <div class="chart__table-container">
@@ -507,30 +634,102 @@ function showDistritos(id, deno){
 
     let tableData = [];
     let chartMultiData = [];
+    let chartData = [];
 
-    $(".chart__table").find("table thead").append(`
-      <tr>
-        <th rowspan="2">ID</th>
-        <th rowspan="2">Distrito</th>
-        <th colspan="2">PDN</th>
-        <th colspan="2">PDNC</th>
-        <th colspan="2">PDT</th>
-      </tr>
-      <tr>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-        <th scope="col">Nº</th>
-        <th scope="col">Inversión</th>
-      </tr>
-    `);
-    
-    event.forEach(function(feature){
-      tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
-      chartMultiData.push({name: feature.f.NOM_DIS, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
-      //console.log(numberWithCommas(feature.f.Inversion_pdn));
-    });
+    switch(tipo) {
+        case 'PDN':
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Distrito</th>
+                <th colspan="2">PDN</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn)]);
+              chartData.push([feature.f.NOM_DIS, parseInt(feature.f.Nro_pdn)]);
+            });
+
+            new Chartkick.PieChart("chartDis", chartData);
+
+            break;
+
+        case 'PDNC':
+             $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Distrito</th>
+                <th colspan="2">PDNC</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc)]);
+              chartData.push([feature.f.NOM_DIS, parseInt(feature.f.Nro_pdnc)]);
+            });
+
+            new Chartkick.PieChart("chartDis", chartData);
+
+            break;
+
+        case 'PDT':
+
+            $(".chart__table").find("table thead").append(`
+              <tr>
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Distrito</th>
+                <th colspan="2">PDT</th>
+              </tr>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col">Inversión</th>
+              </tr>
+            `);
+
+            event.forEach(function(feature){
+              tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+              chartData.push([feature.f.NOM_DIS, parseInt(feature.f.Nro_pdt)]);
+            });
+            
+            new Chartkick.PieChart("chartDis", chartData);
+
+            break;
+
+        default:
+            $(".chart__table").find("table thead").append(`
+            <tr>
+              <th rowspan="2">ID</th>
+              <th rowspan="2">Distrito</th>
+              <th colspan="2">PDN</th>
+              <th colspan="2">PDNC</th>
+              <th colspan="2">PDT</th>
+            </tr>
+            <tr>
+              <th scope="col">Nº</th>
+              <th scope="col">Inversión</th>
+              <th scope="col">Nº</th>
+              <th scope="col">Inversión</th>
+              <th scope="col">Nº</th>
+              <th scope="col">Inversión</th>
+            </tr>
+          `);
+          
+          event.forEach(function(feature){
+            tableData.push([feature.f.ID_DIS, feature.f.NOM_DIS, feature.f.Nro_pdn, 'S/. ' + numberWithCommas(feature.f.Inversion_pdn), feature.f.Nro_pdnc, 'S/. ' + numberWithCommas(feature.f.Inversion_pdnc), feature.f.Nro_pdt, 'S/. ' + numberWithCommas(feature.f.Inversion_pdt)]);
+            chartMultiData.push({name: feature.f.NOM_DIS, data: {"PDN": parseInt(feature.f.Nro_pdn), "PDNC": parseInt(feature.f.Nro_pdnc), "PDT": parseInt(feature.f.Nro_pdt)}});
+          });
+
+          new Chartkick.ColumnChart("chartDis", chartMultiData, {legend: "bottom"});
+    }
 
     $(function() {
       loadState();
@@ -570,8 +769,6 @@ function showDistritos(id, deno){
             "visible": false
           } ]
       } );
-
-      new Chartkick.ColumnChart("chartDis", chartMultiData, {legend: "bottom"});
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
@@ -613,7 +810,7 @@ function showDistritos(id, deno){
   });
 }
 
-function showCP(id, deno){
+function showCP(id, deno, tipo){
   disID = id;
 
   removeAllFeatures();
@@ -626,12 +823,12 @@ function showCP(id, deno){
     }
   });
 
-  capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno, null, function(event){    
+  capaCP.loadGeoJson('/cp?deps=&provs=&dis=' + disID + '&ccpps=&deno=' + deno + '&tipo=' + tipo, null, function(event){    
     //console.log(event);
     $(".chart__table").html(`
       <div class="chart__table-container">
       <div class="page-header"><h3>Centro Poblado</h3></div>
-      <table id="tblCP" class="table table-striped table-bordered dt-responsive nowrap table-hover table-condensed" cellspacing="0" width="100%">
+      <table id="tblCP" cellspacing="0" width="100%">
         <thead class="thead-dark">
         </thead>
         <tbody>
@@ -663,8 +860,9 @@ function showCP(id, deno){
     let NRO_FAMILIAS_M = 0;
     let NRO_FAMILIAS_F = 0;
     let NRO_FAMILIAS = 0;
+    
     event.forEach(function(feature){
-      //console.log(feature);
+      console.log(feature);
 
       NRO_FAMILIAS_M += parseInt(feature.f.NRO_FAMILIAS_M);
       NRO_FAMILIAS_F += parseInt(feature.f.NRO_FAMILIAS_F);
@@ -712,7 +910,7 @@ function showCP(id, deno){
 
       } );
 
-      new Chartkick.PieChart("chartCP", [["Hombes", NRO_FAMILIAS_M], ["Mujeres", NRO_FAMILIAS_F]], {donut: true});
+      new Chartkick.PieChart("chartCP", [["Hombres", NRO_FAMILIAS_M], ["Mujeres", NRO_FAMILIAS_F]], {donut: true});
 
       let chartHeight= $('.chart').height()
       $('#map').height(chartHeight);
@@ -741,28 +939,29 @@ function showCP(id, deno){
 }
 
 function cleanForm(){
-  $('#txtDenom').val('');
+  
 }
 
 function search(){
     let denoInput = $('#txtDenom').val();
+    let ddlTipo = $('#ddlTipo').val();
 
     if ( $('#ddlDepartamento').val() != null && $('#ddlProvincia').val() != null && $('#ddlDistrito').val() != null ) { //Todos seleccionados
       let disID = $("#ddlDistrito").val();
-      showCP(disID, denoInput);
-      console.log('Buscando ' + denoInput + ' en el distrito ' + disID);
+      showCP(disID, denoInput, ddlTipo);
+      console.log('Mostrando ' + denoInput + ' en el distrito ' + disID);
     } else if ($('#ddlDepartamento').val() != null && $('#ddlProvincia').val() != null && $('#ddlDistrito').val() === null) { //Departamento => Provincia
       let provID = $("#ddlProvincia").val();
-      showDistritos(provID, denoInput);
-      console.log('Buscando ' + denoInput + ' en la provincia ' + provID);
+      showDistritos(provID, denoInput, ddlTipo);
+      console.log('Mostrando ' + denoInput + ' en la provincia ' + provID);
     } else if ($('#ddlDepartamento').val() != null && $('#ddlProvincia').val() === null && $('#ddlDistrito').val() === null) { //Departamento
       cleanForm('dep');
       let depID = $("#ddlDepartamento").val();
-      showProvincias(depID, denoInput);
-      console.log('Buscando ' + denoInput + ' en el departamento ' + depID);
+      showProvincias(depID, denoInput, ddlTipo);
+      console.log('Mostrando ' + denoInput + ' en el departamento ' + depID);
     }else{
-      showDepartamentos(denoInput);
-      console.log('Buscando ' + denoInput + ' en todos los departamentos');
+      showDepartamentos(denoInput, ddlTipo);
+      console.log('Mostrando ' + denoInput + ' en todos los departamentos');
     }
 }
 
@@ -775,11 +974,12 @@ $('#btnBuscar').click(function(e){
 $('#btnLimpiar').click(function(){
   //debugger;
   //initialState();
-  cleanForm();
-  showDepartamentos('');
+  $('#txtDenom').val('');
+  $('#ddlTipo').val('');
+  showDepartamentos('','');
 });
 
-showDepartamentos('');
+showDepartamentos('','');
 
 
 capaDepartamentos.addListener('click', function(event) {
@@ -860,7 +1060,7 @@ $(document).ready(function() {
 
     $("#ddlDepartamento").change(function(event){
       initialState();
-      showProvincias($(this).val(), $('#txtDenom').val());
+      showProvincias($(this).val(), $('#txtDenom').val(), $('#ddlTipo').val());
 
       $.ajax({
         url: 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarProvinciascombo',
@@ -887,7 +1087,7 @@ $(document).ready(function() {
 
     $("#ddlProvincia").change(function(){
       initialState();     
-      showDistritos($(this).val(), $('#txtDenom').val());
+      showDistritos($(this).val(), $('#txtDenom').val(), $('#ddlTipo').val());
 
       $.ajax({
         url: 'http://qa.agrorural.gob.pe/WebAPI_GeoAgro/api/geo/ListarDistritoscombo',
@@ -914,6 +1114,17 @@ $(document).ready(function() {
 
     $("#ddlDistrito").change(function(){
       initialState();    
-      showCP($(this).val(), $('#txtDenom').val());
+      showCP($(this).val(), $('#txtDenom').val(), $('#ddlTipo').val());
+    });
+
+    $("#ddlTipo").change(function(){
+      initialState();
+
+      let denoInput = $('#txtDenom').val();
+      let ddlTipo = $(this).val();
+
+      search();
+
+      //console.log($("#ddlDepartamento").val());
     });
 });

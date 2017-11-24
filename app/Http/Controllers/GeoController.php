@@ -48,12 +48,17 @@ class GeoController extends Controller
         $data = htmlspecialchars($data);
         $deno = $data;
 
+        $data = trim($_GET['tipo']);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        $tipo = $data;
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$ids."',vDenominacion:'".$deno."'}"); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$ids."',vDenominacion:'".$deno."',vTipo:'".$tipo."'}"); 
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json')); 
 
         $result=curl_exec ($ch);
@@ -135,12 +140,17 @@ class GeoController extends Controller
         $data = htmlspecialchars($data);
         $deno = $data;
 
+        $data = trim($_GET['tipo']);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        $tipo = $data;
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',vDenominacion:'".$deno."'}"); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',vDenominacion:'".$deno."',vTipo:'".$tipo."'}"); 
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json')); 
 
         $result=curl_exec ($ch);
@@ -225,12 +235,17 @@ class GeoController extends Controller
         $data = htmlspecialchars($data);
         $deno = $data;
 
+        $data = trim($_GET['tipo']);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        $tipo = $data;
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',ID_DIS:'".$Distritos_ids."',vDenominacion:'".$deno."'}"); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',ID_DIS:'".$Distritos_ids."',vDenominacion:'".$deno."',vTipo:'".$tipo."'}"); 
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json')); 
 
         $result=curl_exec ($ch);
@@ -319,12 +334,17 @@ class GeoController extends Controller
         $data = htmlspecialchars($data);
         $deno = $data;
 
+        $data = trim($_GET['tipo']);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        $tipo = $data;
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',ID_DIS:'".$Distritos_ids."',iCodCCPP:'".$CCPP_ids."',vDenominacion:'".$deno."'}"); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     "{ID_DEP:'".$Departamentos_ids."',ID_PROV:'".$Provincias_ids."',ID_DIS:'".$Distritos_ids."',iCodCCPP:'".$CCPP_ids."',vDenominacion:'".$deno."',vTipo:'".$tipo."'}"); 
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json')); 
 
         $result=curl_exec ($ch);

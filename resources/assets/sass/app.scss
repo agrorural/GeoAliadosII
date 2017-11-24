@@ -148,3 +148,13 @@ html, body {
 .form-control-sm{
 	@extend .input-sm;
 }
+
+table{
+	@extend .table;
+	@extend .table;
+	@extend .table-striped;
+	@extend .table-bordered;
+	@extend .table-hover;
+	@extend .table-responsive;
+	@extend .table-condensed;
+}

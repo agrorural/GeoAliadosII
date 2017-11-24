@@ -23,17 +23,20 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="ddlPlan">Plan</label>
-                    <select id="ddlPlan" class="form-control input-sm">
-                      <option>Seleccione plan</option>
+                    <label for="ddlTipo">Plan</label>
+                    <select id="ddlTipo" class="form-control input-sm">
+                      <option selected value="">Todos</option>
+                      <option value="PDN">PDN</option>
+                      <option value="PDNC">PDNC</option>
+                      <option value="PDT">PDT</option>
                     </select>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="ddlCadena">Cadena</label>
                     <select id="ddlCadena" class="form-control input-sm">
                       <option>Seleccione cadena</option>
                     </select>
-                  </div>
+                  </div> -->
                   <div class="form-group txtDenom input-group">
                     <label for="txtDenom">Denominación</label>
                     <input id="txtDenom" type="text" class="form-control input-sm" placeholder="">
