@@ -1,6 +1,6 @@
 @extends ('master')
 @section('head')
-    <title>Bienvenido</title>
+    <title>Georeferenciación de Proyectos</title>
 @stop
 @section('content')
     <div id="app">
